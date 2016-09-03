@@ -6,9 +6,10 @@ var speak = function (text) {
     window.speechSynthesis.speak(msg);
 };
 
-var showInfo = function(msg) {
-    console.log(msg);
-    speak(msg);
+var marko = function(msg, quiet = false) {
+    spokenResponse.style.display="block";
+    spokenResponse.firstChild.firstChild.textContent = msg;
+    if (!quiet) speak(msg);
 };
 
 var final_transcript = '';
@@ -21,31 +22,29 @@ recognition.maxAlternatives = 1;
 
 recognition.onstart = function() {
     recognizing = true;
-    rec.classList.toggle("off");
-    // Marko says: How can i help you?
+    rec.classList.remove("off");
+    console.log("recognizing...");
+};
+
+recognition.onend = function() {
+    recognizing = false;
+    rec.classList.add("off");
+    console.log("not recognizing...");
 };
 
 recognition.onnomatch = function(event) {
-    showInfo("No match found.");
+    marko("No match found.");
 };
 
 recognition.onerror = function(event) {
     if (event.error == 'no-speech') {
         rec.classList.toggle("off");
-        showInfo('info no speech');
-        ignore_onend = true;
+        marko('info no speech');
     }
     if (event.error == 'audio-capture') {
         rec.classList.toggle("off");
-        showInfo('info no microphone');
-        ignore_onend = true;
+        marko('info no microphone');
     }
-};
-
-recognition.onend = function() {
-    recognizing = false;
-    rec.classList.toggle("off");
-    showInfo("stop recognizing.")
 };
 
 recognition.onresult = function(event) {
@@ -58,19 +57,39 @@ recognition.onresult = function(event) {
 
     if (intern_transcript != final_transcript) {
         final_transcript = intern_transcript;
-        showInfo(final_transcript);
 
-        // display final_transcript
-        // translate to search
-        // make search
-        // display results
+        speech.value = final_transcript;
+
+        $.ajax({
+            url: 'http://localhost:3000/api/search/',
+            type: 'GET',
+            data: 'q=' + encodeURI(final_transcript),
+        }).done(function(data, status, resp) {
+            if (status == "success") {
+                var intention = data.intention;
+                var r = data.data;
+
+                console.log(intention);
+
+                marko(r.response);
+
+                // make search
+
+                // display results
+
+            }
+        }).fail(function(data, status, error) {
+            console.log(error);
+        });
     }
 };
 
 rec.onclick = function(event) {
     if (recognizing) {
         recognition.stop();
+        marko("Bye bye!");
     } else {
+        marko("Hello, how can I help you?", true);
         recognition.start();
     }
 };

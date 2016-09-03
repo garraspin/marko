@@ -7,26 +7,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var api = require('./routes/api');
 
 var app = express();
 
 // marklogic
 var marklogic = require('marklogic');
-var session = require('express-session');
-var MarkLogicStore = require('connect-marklogic')(session);
 var mlClient = marklogic.createDatabaseClient({
     host: 'localhost',
     port: '8000',
     user: 'admin',
     password: 'admin',
 });
-app.use(session({
-    store: new MarkLogicStore({ client: mlClient }),
-    secret: 'enterprise nosql'
-}));
-
 var queryBuilder = marklogic.queryBuilder
 
 // view engine setup
@@ -42,7 +34,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 app.use('/api', api);
 
 // catch 404 and forward to error handler
