@@ -1,5 +1,14 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    div(class="container")
+        div(class="image-logo")
+        p Marklogic's personal asistant
+        div(class="inputs")
+            input(id="speech", type="text")
+            button(id="rec", class="off btn")
+        div(id="spokenResponse", class="spoken-response")
+            div(class="spoken-response__text")
+                textarea(style="height: 85px", disabled)
+        div(id="results")
+        script(src="javascripts/index.controller.js")
