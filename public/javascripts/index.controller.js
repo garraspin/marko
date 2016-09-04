@@ -66,17 +66,12 @@ recognition.onresult = function(event) {
             data: 'q=' + encodeURI(final_transcript),
         }).done(function(data, status, resp) {
             if (status == "success") {
-                var intention = data.intention;
-                var r = data.data;
+                marko(data.response);
 
-                console.log(intention);
-
-                marko(r.response);
-
-                // make search
-
-                // display results
-
+                if (data.searchResults) {
+                    // display results
+                    console.log(data.searchResults);
+                }
             }
         }).fail(function(data, status, error) {
             console.log(error);

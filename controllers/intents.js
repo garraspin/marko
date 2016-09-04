@@ -1,21 +1,25 @@
 var searchIntent = {
-    intention: "search",
     belongsTo: (words, q) => findOne(words, ["search", "find", "searching"]),
     getData: function(words, q) {
-        return { response: "on my way!", text: q };
+        return { response: "I will search for that right away!", searchResults: q };
+    }
+};
+var saluteIntent = {
+    belongsTo: (words, q) => findAll(words, ["how", "are", "you"]),
+    getData: function(words, q) {
+        return { response: "I'm fine. Thanks!" };
     }
 };
 
-var _intents = [searchIntent];
+var _intents = [searchIntent, saluteIntent];
 
 var intents = {
     find: function (q) {
         var words = q.split(" ");
         var result = _intents.find(i => i.belongsTo(words, q));
-
         return result == undefined ?
-            { intention: "not found", data: {response: "Ops!"}} :
-            { intention: result.intention, data: result.getData(words, q) };
+            { response: "Ops! I didn't understand that." } :
+            result.getData(words, q);
     }
 };
 

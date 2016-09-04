@@ -11,16 +11,6 @@ var api = require('./routes/api');
 
 var app = express();
 
-// marklogic
-var marklogic = require('marklogic');
-var mlClient = marklogic.createDatabaseClient({
-    host: 'localhost',
-    port: '8000',
-    user: 'admin',
-    password: 'admin',
-});
-var queryBuilder = marklogic.queryBuilder
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
