@@ -3,13 +3,16 @@ extends layout
 block content
     div(class="container")
         div(class="image-logo")
-        p Marklogic's personal asistant
+        p MarkLogic's personal assistant
         div(class="inputs")
             input(id="speech", type="text")
             button(id="rec", class="off btn")
         div(id="spokenResponse", class="spoken-response")
-            div(class="spoken-response__text")
+            div(class="response-container")
                 textarea(style="height: 85px", disabled)
         div(id="results")
+            p Results:
+            div(id="resultsTable", class="response-container")
+                textarea(style="height: 85px", disabled)
         script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
         script(src="javascripts/index.controller.js")

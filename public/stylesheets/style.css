@@ -35,7 +35,6 @@ body {
     background-image: url("../images/mic.gif");
 }
 
-
 #speech {
     width: 90%;
 }
@@ -91,7 +90,7 @@ input:active, input:focus, textarea:active, textarea:focus {
     -webkit-transition: all 0.35s ease-in;
 }
 
-.spoken-response__text {
+.response-container {
     background-color: #f6f6f6;
     border: 1px solid;
     padding: 1em;

@@ -57,8 +57,9 @@ recognition.onresult = function(event) {
 
     if (intern_transcript != final_transcript) {
         final_transcript = intern_transcript;
-
         speech.value = final_transcript;
+        results.style.display="none";
+        resultsTable.firstChild.textContent = "";
 
         $.ajax({
             url: 'http://localhost:3000/api/search/',
@@ -69,8 +70,9 @@ recognition.onresult = function(event) {
                 marko(data.response);
 
                 if (data.searchResults) {
-                    // display results
-                    console.log(data.searchResults);
+                    results.style.display="block";
+                    resultsTable.firstChild.textContent =
+                        data.searchResults.map(s => JSON.stringify(s) + '\n');
                 }
             }
         }).fail(function(data, status, error) {
