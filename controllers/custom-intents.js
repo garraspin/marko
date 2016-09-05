@@ -6,7 +6,9 @@ var findAll = (haystack, arr) => arr.every(v => haystack.indexOf(v) >= 0);
 var searchIntent = {
     belongsTo: (words, q) => findOne(words, ["search", "find", "searching"]),
     getData: function(words, q) {
-        return { response: "I will search for that right away!", searchResults: mldb.search(words, q) };
+        return mldb.search(words, q).then(results =>
+            ({ response: "I will search for that right away!", searchResults: results })
+        );
     }
 };
 

@@ -1,7 +1,3 @@
-var Promise = require('bluebird');
-var path = require('path');
-var request = Promise.promisify(require("request"));
-
 var marklogic = require('marklogic');
 
 var db = marklogic.createDatabaseClient({
@@ -10,21 +6,15 @@ var db = marklogic.createDatabaseClient({
     user: 'admin',
     password: 'admin',
 });
-var q = marklogic.queryBuilder;
-
-db.documents.query(
-    q.where(
-        q.value('first_name', 'Douglas')
-    )
-).result(documents => {
-    documents.forEach(function(document) {
-        console.log(JSON.stringify(document));
-    });
-});
+var queryBuilder = marklogic.queryBuilder;
 
 var mldb = {
     search: (words, q) => {
-        return [{words: words}, {query: q}];
+        return db.documents.query(
+            queryBuilder.where(
+                queryBuilder.value('first_name', 'Douglas')
+            )
+        ).result();
     }
 };
 
