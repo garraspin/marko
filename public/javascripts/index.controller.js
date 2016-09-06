@@ -57,16 +57,20 @@ recognition.onresult = function(event) {
 
     if (intern_transcript != final_transcript) {
         final_transcript = intern_transcript;
-        speech.value = final_transcript;
-        results.style.display="none";
-        resultsTable.firstChild.textContent = "";
+        console.log(final_transcript);
 
         $.ajax({
             url: 'http://localhost:3000/api/search/',
             type: 'GET',
             data: 'q=' + encodeURI(final_transcript),
         }).done(function(data, status, resp) {
-            if (status == "success") {
+            console.log(data);
+
+            if (status == "success" && !data.ignore) {
+                speech.value = final_transcript;
+                results.style.display="none";
+                resultsTable.firstChild.textContent = "";
+
                 marko(data.response);
 
                 if (data.searchResults) {

@@ -102,3 +102,7 @@ input:active, input:focus, textarea:active, textarea:focus {
     margin-top: 30px;
     padding: 1em;
 }
+
+.resultsTable textarea {
+    font-size: 15px;
+}
