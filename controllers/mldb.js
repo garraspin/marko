@@ -64,7 +64,7 @@ var mldb = {
     search: (words, q) => db.documents.query(buildQueryBuilder(words, q)).result()
 };
 
-mldb.search(["okay", "michael", "search", "serbia", "women"], "").then(d => d.forEach(obj => console.log(JSON.stringify(obj.content))));
+// mldb.search(["okay", "michael", "search", "serbia", "women"], "").then(d => d.forEach(obj => console.log(JSON.stringify(obj.content))));
 // console.log(queryByCountry.query(["okay", "michael", "serbia", "women"], ""));
 // console.log(findOneIndex(["okay", "michael", "spain", "women"], ["spain"]));
 
