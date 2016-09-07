@@ -15,7 +15,7 @@ var marko = function(msg, quiet = false) {
 var final_transcript = '';
 var recognizing = false;
 var recognition = new webkitSpeechRecognition();
-recognition.continuous = true;
+recognition.continuous = false;
 recognition.interimResults = false;
 recognition.lang = 'en-US';
 recognition.maxAlternatives = 1;
@@ -57,7 +57,7 @@ recognition.onresult = function(event) {
 
     if (intern_transcript != final_transcript) {
         final_transcript = intern_transcript;
-        console.log(final_transcript);
+        console.log("final:" + final_transcript);
 
         $.ajax({
             url: 'http://localhost:3000/api/search/',
