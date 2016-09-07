@@ -64,19 +64,16 @@ recognition.onresult = function(event) {
             type: 'GET',
             data: 'q=' + encodeURI(final_transcript),
         }).done(function(data, status, resp) {
-            console.log(data);
-
             if (status == "success" && !data.ignore) {
                 speech.value = final_transcript;
                 results.style.display="none";
-                resultsTable.firstChild.textContent = "";
+                emptyTable(resultsTable);
 
                 marko(data.response);
 
                 if (data.searchResults) {
                     results.style.display="block";
-                    resultsTable.firstChild.textContent =
-                        data.searchResults.map(s => JSON.stringify(s) + '\n');
+                    populateTable(data.searchResults);
                 }
             }
         }).fail(function(data, status, error) {
@@ -94,3 +91,30 @@ rec.onclick = function(event) {
         recognition.start();
     }
 };
+
+function populateTable(rs) {
+    var tbdy = document.createElement('tbody');
+    for (var i = 0; i < rs.length; i++) {
+        var tr = document.createElement('tr');
+        populateCell(rs[i].first_name, tr);
+        populateCell(rs[i].last_name, tr);
+        populateCell(rs[i].age, tr);
+        populateCell(rs[i].country, tr);
+        populateCell(rs[i].gender, tr);
+        tbdy.appendChild(tr);
+    }
+    resultsTable.replaceChild(tbdy, resultsTable.getElementsByTagName("tbody")[0]);
+}
+
+function populateCell(value, tr) {
+    var td = document.createElement('td');
+    td.appendChild(document.createTextNode(value));
+    tr.appendChild(td);
+}
+
+function emptyTable(table) {
+    var tbody = table.getElementsByTagName("tbody")[0];
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+}

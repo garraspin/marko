@@ -2,7 +2,7 @@
 
 MarkLogic's personal assistant.
 
-This site uses voice recognition to search through your contacts database. Just click the mic button and tell a command, Marko will be happy to help you with it. You can just try and say: 'Hi Marko, how are you?'. 
+This site uses voice recognition to search through your contacts database. Just click the mic button and tell a command, Marko will be happy to help you with it. You can just try and say: 'Ok Marko, how are you?'. Commands start with "Ok Marko". 
 This site has been tested only in Chrome. 
 
 ### Installation

@@ -9,7 +9,7 @@ body {
 }
 
 .container {
-    position: fixed;
+    position: absolute;
     top: 25%;
     left: 50%;
     -webkit-transform: translate(-50%, -25%);
@@ -103,6 +103,19 @@ input:active, input:focus, textarea:active, textarea:focus {
     padding: 1em;
 }
 
-.resultsTable textarea {
+#results p {
+    margin-top: 0px;
+}
+
+#resultsTable {
+    width: 100%;
+}
+#resultsTable tbody {
+    background-color: #ffffff;
+    font-size: 15px;
+}
+
+#resultsTable thead {
+    background-color: #f18e8e;
     font-size: 15px;
 }

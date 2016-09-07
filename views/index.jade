@@ -12,7 +12,15 @@ block content
                 textarea(style="height: 85px", disabled)
         div(id="results")
             p Results:
-            div(id="resultsTable", class="response-container")
-                textarea(disabled)
+            div(class="response-container")
+                div(class="response-container")
+                    table(id="resultsTable")
+                        thead
+                            th Name
+                            th Surname
+                            th Age
+                            th Country
+                            th Gender
+                        tbody
         script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
         script(src="javascripts/index.controller.js")

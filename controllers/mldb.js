@@ -1,5 +1,6 @@
 var marklogic = require('marklogic');
 var findOne = require('./arrayUtils').findOne;
+var findOneIndex = require('./arrayUtils').findOneIndex;
 var findAll = require('./arrayUtils').findAll;
 var db = marklogic.createDatabaseClient({
     host: 'localhost',
@@ -17,11 +18,29 @@ var name = ["named", "first name", "name"];
 var lastName = ["surname", "last name"];
 var woman = ["female", "females", "women", "woman"];
 var man = ["male", "males", "man", "men"];
-var countries = ["Afghanistan","Aland Islands","Albania","Argentina","Armenia","Australia","Azerbaijan","Bahrain","Bangladesh","Barbados","Belarus","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Chad","Chile","China","Colombia","Comoros","Croatia","Cuba","Cyprus","Czech Republic","Democratic Republic of the Congo","Denmark","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Ethiopia","Finland","France","French Polynesia","Gambia","Georgia","Germany","Greece","Guam","Guatemala","Honduras","Hungary","Iceland","Indonesia","Iran","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Kazakhstan","Kenya","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Libya","Lithuania","Macao","Macedonia","Madagascar","Malaysia","Maldives","Mali","Malta","Martinique","Mauritania","Mauritius","Mexico","Mongolia","Montenegro","Morocco","Myanmar","Nauru","Nepal","Netherlands","New Zealand","Niger","Nigeria","North Korea","Norway","Pakistan","Palestinian Territory","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Reunion","Russia","Samoa","Saudi Arabia","Serbia","Slovenia","Somalia","South Africa","South Korea","Sudan","Suriname","Sweden","Switzerland","Syria","Tanzania","Thailand","Tunisia","Turkey","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Venezuela","Vietnam","Yemen","Zimbabwe"];
-var race = ["Alaska Native","Alaskan Athabascan","Aleut","American Indian","American Indian and Alaska Native ","Apache","Argentinian","Asian","Asian Indian","Bangladeshi","Black or African American","Blackfeet","Bolivian","Cambodian","Central American","Chamorro","Cherokee","Cheyenne","Chickasaw","Chilean","Chinese","Chippewa","Choctaw","Colombian","Colville","Comanche","Costa Rican","Cree","Creek","Crow","Cuban","Delaware","Dominican ","Ecuadorian","Eskimo","Fijian","Filipino","Guamanian","Guatemalan","Hmong","Honduran","Houma","Indonesian","Iroquois","Japanese","Kiowa","Korean","Laotian","Latin American Indian","Lumbee","Malaysian","Melanesian","Menominee","Mexican","Micronesian","Native Hawaiian","Native Hawaiian and Other Pacific Islander ","Navajo","Nicaraguan","Osage","Ottawa","Paiute","Pakistani","Panamanian","Paraguayan","Peruvian","Pima","Polynesian","Potawatomi","Pueblo","Puerto Rican","Puget Sound Salish","Salvadoran","Samoan","Seminole","Shoshone","Sioux","South American","Spaniard","Sri Lankan","Taiwanese","Thai","Tlingit","Tohono O","Tongan","Uruguayan","Ute","Venezuelan","Vietnamese","White","Yakama","Yaqui","Yuman"];
+var countries = ["afghanistan","aland islands","albania","argentina","armenia","australia","azerbaijan","bahrain","bangladesh","barbados","belarus","bhutan","bolivia","bosnia and herzegovina","botswana","brazil","bulgaria","burkina faso","burundi","cambodia","cameroon","canada","cape verde","chad","chile","china","colombia","comoros","croatia","cuba","cyprus","czech republic","democratic republic of the congo","denmark","dominica","dominican republic","ecuador","egypt","el salvador","ethiopia","finland","france","french polynesia","gambia","georgia","germany","greece","guam","guatemala","honduras","hungary","iceland","indonesia","iran","ireland","israel","italy","ivory coast","jamaica","japan","kazakhstan","kenya","kuwait","kyrgyzstan","laos","latvia","lebanon","lesotho","libya","lithuania","macao","macedonia","madagascar","malaysia","maldives","mali","malta","martinique","mauritania","mauritius","mexico","mongolia","montenegro","morocco","myanmar","nauru","nepal","netherlands","new zealand","niger","nigeria","north korea","norway","pakistan","palestinian territory","panama","papua new guinea","paraguay","peru","philippines","poland","portugal","reunion","russia","samoa","saudi arabia","serbia","slovenia","somalia","south africa","south korea","sudan","suriname","sweden","switzerland","syria","tanzania","thailand","tunisia","turkey","uganda","ukraine","united arab emirates","united kingdom","united states","uruguay","uzbekistan","venezuela","vietnam","yemen","zimbabwe"];
+var race = ["alaska native","alaskan athabascan","aleut","american indian","american indian and alaska native ","apache","argentinian","asian","asian indian","bangladeshi","black or african american","blackfeet","bolivian","cambodian","central american","chamorro","cherokee","cheyenne","chickasaw","chilean","chinese","chippewa","choctaw","colombian","colville","comanche","costa rican","cree","creek","crow","cuban","delaware","dominican ","ecuadorian","eskimo","fijian","filipino","guamanian","guatemalan","hmong","honduran","houma","indonesian","iroquois","japanese","kiowa","korean","laotian","latin american indian","lumbee","malaysian","melanesian","menominee","mexican","micronesian","native hawaiian","native hawaiian and other pacific islander ","navajo","nicaraguan","osage","ottawa","paiute","pakistani","panamanian","paraguayan","peruvian","pima","polynesian","potawatomi","pueblo","puerto rican","puget sound salish","salvadoran","samoan","seminole","shoshone","sioux","south american","spaniard","sri lankan","taiwanese","thai","tlingit","tohono o","tongan","uruguayan","ute","venezuelan","vietnamese","white","yakama","yaqui","yuman"];
 
-// {"id":1,"first_name":"Marilyn","last_name":"Mitchell","email":"mmitchell0@yolasite.com","gender":"Female","ip_address":"101.240.87.37","country":"Brazil","age":67,"race":"South American"}
-
+var queryByRace = {
+  query: (words, q) => {
+      result = {};
+      var index = findOneIndex(words, race);
+      if (index > -1) {
+          result = { race: words[index] };
+      }
+      return result;
+  }
+};
+var queryByCountry = {
+  query: (words, q) => {
+      result = {};
+      var index = findOneIndex(words, countries);
+      if (index > -1) {
+          result = { country: words[index] };
+      }
+      return result;
+  }
+};
 var queryByGender = {
   query: (words, q) => {
       result = {};
@@ -34,7 +53,7 @@ var queryByGender = {
   }
 };
 
-const queryTypes = [queryByGender];
+const queryTypes = [queryByGender, queryByCountry];
 
 var buildQueryBuilder = (words, q) => {
     var qs = queryTypes.map(builder => builder.query(words, q));
@@ -45,6 +64,8 @@ var mldb = {
     search: (words, q) => db.documents.query(buildQueryBuilder(words, q)).result()
 };
 
-// mldb.search(["okay", "michael", "search", "women"], "").then(d => d.forEach(obj => console.log(JSON.stringify(obj.content))));
+mldb.search(["okay", "michael", "search", "serbia", "women"], "").then(d => d.forEach(obj => console.log(JSON.stringify(obj.content))));
+// console.log(queryByCountry.query(["okay", "michael", "serbia", "women"], ""));
+// console.log(findOneIndex(["okay", "michael", "spain", "women"], ["spain"]));
 
 module.exports = mldb;
