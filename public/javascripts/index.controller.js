@@ -56,29 +56,7 @@ recognition.onresult = function(event) {
     }
 
     if (intern_transcript != final_transcript) {
-        final_transcript = intern_transcript;
-        console.log("final:" + final_transcript);
-
-        $.ajax({
-            url: 'http://localhost:3000/api/search/',
-            type: 'GET',
-            data: 'q=' + encodeURI(final_transcript),
-        }).done(function(data, status, resp) {
-            if (status == "success" && !data.ignore) {
-                speech.value = final_transcript;
-                results.style.display="none";
-                emptyTable(resultsTable);
-
-                marko(data.response);
-
-                if (data.searchResults) {
-                    results.style.display="block";
-                    populateTable(data.searchResults);
-                }
-            }
-        }).fail(function(data, status, error) {
-            console.log(error);
-        });
+        sendCommand(intern_transcript);
     }
 };
 
@@ -91,6 +69,38 @@ rec.onclick = function(event) {
         recognition.start();
     }
 };
+
+speech.onkeydown = function(event) {
+    if (event.keyCode == 13) {
+        sendCommand(speech.value);
+    }
+};
+
+function sendCommand(transcript) {
+    final_transcript = transcript;
+    console.log("final:" + final_transcript);
+
+    $.ajax({
+        url: 'http://localhost:3000/api/search/',
+        type: 'GET',
+        data: 'q=' + encodeURI(final_transcript),
+    }).done(function (data, status, resp) {
+        if (status == "success" && !data.ignore) {
+            speech.value = final_transcript;
+            results.style.display = "none";
+            emptyTable(resultsTable);
+
+            marko(data.response);
+
+            if (data.searchResults) {
+                results.style.display = "block";
+                populateTable(data.searchResults);
+            }
+        }
+    }).fail(function (data, status, error) {
+        console.log(error);
+    });
+}
 
 function populateTable(rs) {
     var tbdy = document.createElement('tbody');
